@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+</head>
+
+<body>
+    <h2 th:text="${quiz.title}"></h2>
+    <h1 th:text="${'Score: ' + score + ' / ' + total}"></h1>
+    <a href="/student">Back to quizzes</a>
+</body>
+
+</html>

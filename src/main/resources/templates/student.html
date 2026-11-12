@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student</title>
+</head>
+<body>
+    <h2>Available quizzes</h2>
+    <ul>
+        <li th:each="q : ${quizzes}">
+            <span th:text="${q.title}"></span>
+            <a th:href="@{/quizzes/{id}/take(id=${q.id})}">Take quiz</a>
+        </li>
+    </ul>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

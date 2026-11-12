@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quizzes</title>
+</head>
+<body>
+    <h2>Create new quiz</h2>
+    <form th:action="@{/quizzes}" method="post">
+        Title: <input name="title" required><br>
+        Description: <input name="description"><br>
+        <button type="submit">Create</button>
+    </form>
+
+    <h2>All quizzes</h2>
+    <ul>
+        <li th:each="q : ${quizzes}">
+            <a th:href="@{/quizzes/{id}(id=${q.id})}" th:text="${q.title}"></a>
+            - <span th:text="${q.description}"></span>
+        </li>
+    </ul>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Detail</title>
+</head>
+<body>
+    <a href="/quizzes">&larr; Back to quizzes</a>
+    <h2 th:text="${quiz.title}"></h2>
+    <p th:text="${quiz.description}"></p>
+
+    <h3>Add question</h3>
+    <form th:action="@{/quizzes/{id}/questions(id=${quiz.id})}" method="post">
+        Question: <input name="text" required><br>
+        Option A: <input name="optionA" required><br>
+        Option B: <input name="optionB" required><br>
+        Option C: <input name="optionC" required><br>
+        Option D: <input name="optionD" required><br>
+        Correct answer:
+        <select name="correctAnswer">
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+            <option>D</option>
+        </select><br>
+        <button type="submit">Add</button>
+    </form>
+
+    <h3>Questions</h3>
+    <div th:each="q, i : ${questions}">
+        <p><b th:text="${i.count + '. ' + q.text}"></b></p>
+        <p>A) <span th:text="${q.optionA}"></span></p>
+        <p>B) <span th:text="${q.optionB}"></span></p>
+        <p>C) <span th:text="${q.optionC}"></span></p>
+        <p>D) <span th:text="${q.optionD}"></span></p>
+        <p>Correct: <b th:text="${q.correctAnswer}"></b></p>
+        <hr>
+    </div>
+</body>
+</html>
