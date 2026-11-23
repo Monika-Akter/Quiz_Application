@@ -14,8 +14,9 @@ public class Question {
     private String optionC;
     private String optionD;
     private String correctAnswer;
+    private Integer timeLimit;   // second e
 
-    @ManyToOne 
+    @ManyToOne
     private Quiz quiz;
 
     public void setId(long id) {
@@ -44,6 +45,10 @@ public class Question {
 
     public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    public void setTimeLimit(Integer timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
     public void setQuiz(Quiz quiz) {
@@ -76,6 +81,10 @@ public class Question {
 
     public String getCorrectAnswer() {
         return correctAnswer;
+    }
+
+    public Integer getTimeLimit() {
+        return timeLimit;
     }
 
     public Quiz getQuiz() {

@@ -1,20 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Student</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Available Quizzes | Online Quiz System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-    <h2>Available quizzes</h2>
-    <ul>
-        <li th:each="q : ${quizzes}">
-            <span th:text="${q.title}"></span>
-            <a th:href="@{/quizzes/{id}/take(id=${q.id})}">Take quiz</a>
-        </li>
-    </ul>
 
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Logout</button>
-    </form>
+<body>
+    <header class="topbar">
+        <span class="brand">Online Quiz System</span>
+        <a class="btn btn-light" href="/student/exit">Leave</a>
+    </header>
+
+    <div class="container">
+        <h1>Available Quizzes</h1>
+        <p class="muted">
+            <b th:text="${studentName}"></b> &nbsp;|&nbsp;
+            Student ID: <b th:text="${studentNo}"></b> &nbsp;|&nbsp;
+            Batch: <b th:text="${batch}"></b>
+        </p>
+
+        <div class="alert alert-info" th:if="${param.already}">
+            You have already attempted this quiz. Each quiz can be attempted only once.
+        </div>
+        <div class="alert alert-info" th:if="${param.closed}">
+            This quiz is closed because its deadline has passed.
+        </div>
+
+        <div class="card">
+            <p class="muted" th:if="${quizzes.isEmpty()}">
+                No quizzes are available for you right now. There may be no open quizzes for your batch,
+                or you may have already attempted all of them.
+            </p>
+            <table th:unless="${quizzes.isEmpty()}">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Deadline</th>
+                    <th></th>
+                </tr>
+                <tr th:each="q : ${quizzes}">
+                    <td th:text="${q.title}"></td>
+                    <td th:text="${q.description}"></td>
+                    <td th:text="${#temporals.format(q.deadline, 'dd MMM yyyy, HH:mm')}"></td>
+                    <td><a class="btn" th:href="@{/student/quizzes/{id}/start(id=${q.id})}">Start Quiz</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </body>
+
 </html>

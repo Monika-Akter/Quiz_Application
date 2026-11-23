@@ -15,39 +15,36 @@ import com.quiz.quiz_system.repository.UserRepository;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> userRepository.findByUsername(username)
-                .map(u -> User.withUsername(u.getUsername())
-                        .password(u.getPassword())
-                        .roles(u.getRole())
-                        .build())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+        @Bean
+        public UserDetailsService userDetailsService(UserRepository userRepository) {
+                return username -> userRepository.findByUsername(username)
+                                .map(u -> User.withUsername(u.getUsername())
+                                                .password(u.getPassword())
+                                                .roles(u.getRole())
+                                                .build())
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register").permitAll()
-                        .requestMatchers("/quizzes/*/take", "/quizzes/*/submit", "/student/**").hasRole("STUDENT")
-                        .requestMatchers("/quizzes", "/quizzes/**").hasRole("TEACHER")
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .successHandler((request, response, authentication) -> {
-                            boolean teacher = authentication.getAuthorities().stream()
-                                    .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER"));
-                            response.sendRedirect(teacher ? "/quizzes" : "/student");
-                        })
-                        .permitAll())
-                .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll());
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/", "/join", "/student/**", "/login", "/register",
+                                                                "/css/**", "/error")
+                                                .permitAll()
+                                                .requestMatchers("/quizzes", "/quizzes/**").hasRole("TEACHER")
+                                                .anyRequest().authenticated())
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .defaultSuccessUrl("/quizzes", true)
+                                                .permitAll())
+                                .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll());
 
-        return http.build();
-    }
+                return http.build();
+        }
 }

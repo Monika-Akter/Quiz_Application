@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Question | Online Quiz System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <header class="topbar">
+        <span class="brand">Online Quiz System</span>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-light" type="submit">Sign Out</button>
+        </form>
+    </header>
+
+    <div class="container">
+        <p><a th:href="@{/quizzes/{id}(id=${quiz.id})}">&larr; Back to Quiz</a></p>
+
+        <div class="card">
+            <h2>Edit Question</h2>
+            <form th:action="@{/quizzes/{id}/questions/{qid}/edit(id=${quiz.id},qid=${question.id})}" method="post">
+                <label for="text">Question Text</label>
+                <input id="text" name="text" th:value="${question.text}" required>
+
+                <label for="optionA">Option A</label>
+                <input id="optionA" name="optionA" th:value="${question.optionA}" required>
+
+                <label for="optionB">Option B</label>
+                <input id="optionB" name="optionB" th:value="${question.optionB}" required>
+
+                <label for="optionC">Option C</label>
+                <input id="optionC" name="optionC" th:value="${question.optionC}" required>
+
+                <label for="optionD">Option D</label>
+                <input id="optionD" name="optionD" th:value="${question.optionD}" required>
+
+                <label for="correctAnswer">Correct Answer</label>
+                <select id="correctAnswer" name="correctAnswer">
+                    <option th:selected="${question.correctAnswer == 'A'}">A</option>
+                    <option th:selected="${question.correctAnswer == 'B'}">B</option>
+                    <option th:selected="${question.correctAnswer == 'C'}">C</option>
+                    <option th:selected="${question.correctAnswer == 'D'}">D</option>
+                </select>
+
+                <label for="timeLimit">Time Limit (seconds)</label>
+                <input id="timeLimit" type="number" name="timeLimit" min="5" required
+                    th:value="${question.timeLimit != null ? question.timeLimit : 30}">
+
+                <br><br>
+                <div class="actions">
+                    <button type="submit">Save Changes</button>
+                    <a class="btn btn-secondary" th:href="@{/quizzes/{id}(id=${quiz.id})}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

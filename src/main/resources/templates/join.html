@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Join | Online Quiz System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container narrow">
+        <h1 class="center">Online Quiz System</h1>
+        <div class="card">
+            <h2>Student Details</h2>
+            <p class="muted">Enter your details to see the quizzes available for your batch. All fields are required.
+            </p>
+
+            <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+
+            <form th:action="@{/join}" method="post">
+                <label for="fullName">Full Name</label>
+                <input id="fullName" name="fullName" th:value="${fullName}" required>
+
+                <label for="university">University</label>
+                <input id="university" name="university" th:value="${university}" required>
+
+                <label for="department">Department</label>
+                <input id="department" name="department" th:value="${department}" required>
+
+                <label for="batch">Batch</label>
+                <input id="batch" type="number" min="1" name="batch" th:value="${batch}" required>
+
+                <label for="studentNo">Student ID</label>
+                <input id="studentNo" name="studentNo" th:value="${studentNo}" required>
+
+                <br><br>
+                <button type="submit">Continue</button>
+            </form>
+            <p class="muted">Are you a teacher? <a href="/login">Sign in</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

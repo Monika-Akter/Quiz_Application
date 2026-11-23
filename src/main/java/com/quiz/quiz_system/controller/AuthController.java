@@ -1,5 +1,6 @@
 package com.quiz.quiz_system.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,9 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${quiz.teacher-code}")
+    private String teacherCode;
+
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -23,7 +27,7 @@ public class AuthController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/login";
+        return "redirect:/join";
     }
 
     @GetMapping("/login")
@@ -40,17 +44,35 @@ public class AuthController {
     public String register(@RequestParam String fullName,
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String role,
+            @RequestParam String accessCode,
             Model model) {
-        if (userRepository.findByUsername(username).isPresent()) {
-            model.addAttribute("error", "Username already taken");
+        fullName = fullName.trim();
+        username = username.trim();
+        model.addAttribute("fullName", fullName);
+        model.addAttribute("username", username);
+
+        if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || accessCode.isEmpty()) {
+            model.addAttribute("error", "All fields are required.");
             return "register";
         }
+        if (!accessCode.equals(teacherCode)) {
+            model.addAttribute("error", "Invalid teacher access code.");
+            return "register";
+        }
+        if (password.length() < 6) {
+            model.addAttribute("error", "Password must be at least 6 characters long.");
+            return "register";
+        }
+        if (userRepository.findByUsername(username).isPresent()) {
+            model.addAttribute("error", "This username is already taken. Please choose a different one.");
+            return "register";
+        }
+
         AppUser user = new AppUser();
         user.setFullName(fullName);
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole(role.equals("TEACHER") ? "TEACHER" : "STUDENT");
+        user.setRole("TEACHER");
         userRepository.save(user);
         return "redirect:/login?registered";
     }

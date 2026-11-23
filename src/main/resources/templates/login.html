@@ -2,19 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Sign In | Online Quiz System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <h2>Login</h2>
-    <p th:if="${param.error}">Invalid username or password</p>
-    <p th:if="${param.registered}">Registered! Please login.</p>
-    <p th:if="${param.logout}">You have been logged out.</p>
+    <div class="container narrow">
+        <h1 class="center">Online Quiz System</h1>
+        <div class="card">
+            <h2>Teacher Sign In</h2>
 
-    <form th:action="@{/login}" method="post">
-        Username: <input name="username" required><br>
-        Password: <input type="password" name="password" required><br>
-        <button type="submit">Login</button>
-    </form>
-    <a href="/register">Create account</a>
+            <div class="alert alert-error" th:if="${param.error}">Invalid username or password.</div>
+            <div class="alert alert-info" th:if="${param.registered}">Registration successful. Please sign in.</div>
+            <div class="alert alert-info" th:if="${param.logout}">You have been signed out successfully.</div>
+
+            <form th:action="@{/login}" method="post">
+                <label for="username">Username</label>
+                <input id="username" name="username" required>
+
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" required>
+
+                <br><br>
+                <button type="submit">Sign In</button>
+            </form>
+            <p class="muted">New teacher? <a href="/register">Create an account</a></p>
+            <p class="muted">Are you a student? <a href="/join">Take a quiz</a></p>
+        </div>
+    </div>
 </body>
 </html>

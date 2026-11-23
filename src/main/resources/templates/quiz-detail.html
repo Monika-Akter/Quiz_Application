@@ -1,40 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Detail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Questions | Online Quiz System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-    <a href="/quizzes">&larr; Back to quizzes</a>
-    <h2 th:text="${quiz.title}"></h2>
-    <p th:text="${quiz.description}"></p>
+    <header class="topbar">
+        <span class="brand">Online Quiz System</span>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-light" type="submit">Sign Out</button>
+        </form>
+    </header>
 
-    <h3>Add question</h3>
-    <form th:action="@{/quizzes/{id}/questions(id=${quiz.id})}" method="post">
-        Question: <input name="text" required><br>
-        Option A: <input name="optionA" required><br>
-        Option B: <input name="optionB" required><br>
-        Option C: <input name="optionC" required><br>
-        Option D: <input name="optionD" required><br>
-        Correct answer:
-        <select name="correctAnswer">
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
-            <option>D</option>
-        </select><br>
-        <button type="submit">Add</button>
-    </form>
+    <div class="container">
+        <p><a href="/quizzes">&larr; Back to Dashboard</a></p>
+        <h1 th:text="${quiz.title}"></h1>
+        <p class="muted" th:text="${quiz.description}"></p>
+        <p class="muted">Batches: <b th:text="${quiz.batches}"></b></p>
+        <div class="alert alert-error" th:if="${param.error}">
+            All fields are required, and the time limit must be at least 5 seconds.
+        </div>
 
-    <h3>Questions</h3>
-    <div th:each="q, i : ${questions}">
-        <p><b th:text="${i.count + '. ' + q.text}"></b></p>
-        <p>A) <span th:text="${q.optionA}"></span></p>
-        <p>B) <span th:text="${q.optionB}"></span></p>
-        <p>C) <span th:text="${q.optionC}"></span></p>
-        <p>D) <span th:text="${q.optionD}"></span></p>
-        <p>Correct: <b th:text="${q.correctAnswer}"></b></p>
-        <hr>
+        <div class="card">
+            <h2>Add a Question</h2>
+            <form th:action="@{/quizzes/{id}/questions(id=${quiz.id})}" method="post">
+                <label for="text">Question Text</label>
+                <input id="text" name="text" required>
+
+                <label for="optionA">Option A</label>
+                <input id="optionA" name="optionA" required>
+
+                <label for="optionB">Option B</label>
+                <input id="optionB" name="optionB" required>
+
+                <label for="optionC">Option C</label>
+                <input id="optionC" name="optionC" required>
+
+                <label for="optionD">Option D</label>
+                <input id="optionD" name="optionD" required>
+
+                <label for="correctAnswer">Correct Answer</label>
+                <select id="correctAnswer" name="correctAnswer">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                </select>
+
+                <label for="timeLimit">Time Limit (seconds)</label>
+                <input id="timeLimit" type="number" name="timeLimit" value="30" min="5" required>
+
+                <br><br>
+                <button type="submit">Add Question</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Questions (<span th:text="${questions.size()}"></span>)</h2>
+            <p class="muted" th:if="${questions.isEmpty()}">No questions have been added to this quiz yet.</p>
+
+            <div th:each="q, i : ${questions}">
+                <p><b th:text="${i.count + '. ' + q.text}"></b></p>
+                <p>A) <span th:text="${q.optionA}"></span><br>
+                    B) <span th:text="${q.optionB}"></span><br>
+                    C) <span th:text="${q.optionC}"></span><br>
+                    D) <span th:text="${q.optionD}"></span></p>
+                <p class="muted">
+                    Correct Answer: <b th:text="${q.correctAnswer}"></b> &nbsp;|&nbsp;
+                    Time Limit: <b th:text="${q.timeLimit != null ? q.timeLimit : 30}"></b> seconds
+                </p>
+                <div class="actions">
+                    <a class="btn btn-secondary"
+                        th:href="@{/quizzes/{id}/questions/{qid}/edit(id=${quiz.id},qid=${q.id})}">Edit</a>
+                    <form th:action="@{/quizzes/{id}/questions/{qid}/delete(id=${quiz.id},qid=${q.id})}" method="post">
+                        <button class="btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+                <hr>
+            </div>
+        </div>
     </div>
 </body>
+
 </html>

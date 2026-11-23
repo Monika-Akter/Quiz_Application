@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Delete Quiz | Online Quiz System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header class="topbar">
+        <span class="brand">Online Quiz System</span>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-light" type="submit">Sign Out</button>
+        </form>
+    </header>
+
+    <div class="container narrow">
+        <div class="card">
+            <h2>Delete Quiz</h2>
+            <p>Are you sure you want to delete <b th:text="${quiz.title}"></b>?</p>
+            <p class="muted">All of its questions and all student results will be permanently deleted. This action cannot be undone.</p>
+            <div class="actions">
+                <form th:action="@{/quizzes/{id}/delete(id=${quiz.id})}" method="post">
+                    <button class="btn-danger" type="submit">Yes, Delete Quiz</button>
+                </form>
+                <a class="btn btn-secondary" href="/quizzes">Cancel</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
